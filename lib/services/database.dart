@@ -32,4 +32,11 @@ class DatabaseMethods {
         .doc(id)
         .update(updatedInfo);
   }
+
+  Future<DocumentSnapshot> getUsers(String id) async {
+    return await FirebaseFirestore.instance
+        .collection("users")
+        .doc(id)
+        .get(); // Thêm .get() để trả về DocumentSnapshot
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project_btl/Admin/admin_login.dart';
 import 'package:flutter_project_btl/pages/booking.dart';
 import 'package:flutter_project_btl/pages/infoAccount.dart';
 import 'package:flutter_project_btl/services/shared_pred.dart';
@@ -14,10 +15,11 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  String? name, image;
+  String? name, image, id;
   getthedatafromsharedpred() async{
     name = await SharedpreferenceHelper().getUserName();
     image = await SharedpreferenceHelper().getUserImage();
+    id = await SharedpreferenceHelper().getUserId();
     setState(() {
 
     });
@@ -78,10 +80,19 @@ class _HomeState extends State<Home> {
                           items: [
                             PopupMenuItem(
                               child: ListTile(
+                                leading: Icon(Icons.admin_panel_settings),
+                                title: Text('Tài khoản admin'),
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=> AdminLogin()));
+                                },
+                              ),
+                            ),
+                            PopupMenuItem(
+                              child: ListTile(
                                 leading: Icon(Icons.account_circle),
                                 title: Text('Thông tin tài khoản'),
                                 onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=> Infoaccount()));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=> Infoaccount(userId: id ?? '',)));
                                 },
                               ),
                             ),

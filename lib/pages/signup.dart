@@ -19,6 +19,7 @@ class _SignupState extends State<Signup> {
   TextEditingController nameController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
+  TextEditingController phonenumberController = new TextEditingController();
 
   final _formkey = GlobalKey<FormState>();
 
@@ -30,12 +31,14 @@ class _SignupState extends State<Signup> {
             String id = randomAlphaNumeric(10);
             await SharedpreferenceHelper().saveUserName(nameController.text);
             await SharedpreferenceHelper().saveUserGmail(emailController.text);
+            await SharedpreferenceHelper().saveUserPhoneNumber(phonenumberController.text);
             await SharedpreferenceHelper().saveUserImage("https://firebasestorage.googleapis.com/v0/b/testlogin-4bbfd.appspot.com/o/image_music.jpg?alt=media&token=b54e2088-59a1-4e92-b67c-b5d88fbb16d9");
             await SharedpreferenceHelper().saveUserId(id);
         Map<String, dynamic> userInfoMap ={
           "Name": nameController.text,
           "Gmail": emailController.text,
           "Id": id,
+          "Number phone" :phonenumberController.text,
           "Image": "https://firebasestorage.googleapis.com/v0/b/testlogin-4bbfd.appspot.com/o/image_music.jpg?alt=media&token=b54e2088-59a1-4e92-b67c-b5d88fbb16d9",
         };
         await DatabaseMethods().addUserDetails(userInfoMap, id);
@@ -126,6 +129,9 @@ class _SignupState extends State<Signup> {
                           hintText: "Name",
                           prefixIcon: Icon(Icons.person_outline)),
                     ),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Text(
                       "Gmail",
                       style: TextStyle(
@@ -146,7 +152,29 @@ class _SignupState extends State<Signup> {
                           prefixIcon: Icon(Icons.mail_outline)),
                     ),
                     SizedBox(
-                      height: 40,
+                      height: 20,
+                    ),
+                    Text(
+                      "Phone Number",
+                      style: TextStyle(
+                          color: Color(0xFFB91635),
+                          fontSize: 25,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please Enter Phone number";
+                        }
+                        return null;
+                      },
+                      controller: phonenumberController,
+                      decoration: InputDecoration(
+                          hintText: "Phone Number",
+                          prefixIcon: Icon(Icons.phone_callback_outlined)),
+                    ),
+                    SizedBox(
+                      height: 20,
                     ),
                     Text(
                       "Password",

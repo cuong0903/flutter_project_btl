@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_project_btl/pages/booking.dart';
 import 'package:flutter_project_btl/pages/forgot_password.dart';
 import 'package:flutter_project_btl/pages/home.dart';
+import 'package:flutter_project_btl/pages/infoAccount.dart';
 import 'package:flutter_project_btl/pages/login.dart';
 import 'package:flutter_project_btl/pages/signup.dart';
 import 'pages/onboarding.dart';// Adjust the import path
