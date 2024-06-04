@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project_btl/pages/booking.dart';
 import 'package:flutter_project_btl/pages/infoAccount.dart';
+import 'package:flutter_project_btl/services/shared_pred.dart';
 
 import 'login.dart';
 
@@ -15,6 +16,8 @@ class _HomeState extends State<Home> {
 
   String? name, image;
   getthedatafromsharedpred() async{
+    name = await SharedpreferenceHelper().getUserName();
+    image = await SharedpreferenceHelper().getUserImage();
     setState(() {
 
     });

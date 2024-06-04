@@ -1,6 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_project_btl/services/database.dart';
+
+import '../services/shared_pred.dart';
+
 class Booking extends StatefulWidget {
   String service;
 
@@ -15,6 +19,9 @@ class _BookingState extends State<Booking> {
 
   String? name, image, email;
   getthedatafromsharedpred() async{
+    name = await SharedpreferenceHelper().getUserName();
+    image = await SharedpreferenceHelper().getUserImage();
+    email = await SharedpreferenceHelper().getUserGmail();
     setState(() {
 
     });
@@ -212,7 +219,12 @@ class _BookingState extends State<Booking> {
                   "Email": email,
 
                 };
-
+                await DatabaseMethods().addUserBooking(userBookingmap).then((value)=> {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                "Service has been booked Successflully!!!",
+                style: TextStyle(fontSize: 20.0),)))
+                });
               },
               child: Container(
                 width: MediaQuery.of(context).size.width,

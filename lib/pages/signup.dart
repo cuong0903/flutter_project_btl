@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project_btl/pages/login.dart';
+import 'package:flutter_project_btl/services/database.dart';
+import 'package:flutter_project_btl/services/shared_pred.dart';
 import 'package:random_string/random_string.dart';
 
 import 'home.dart';
@@ -26,13 +28,22 @@ class _SignupState extends State<Signup> {
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: mail!, password: password!);
             String id = randomAlphaNumeric(10);
+            await SharedpreferenceHelper().saveUserName(nameController.text);
+            await SharedpreferenceHelper().saveUserGmail(emailController.text);
+            await SharedpreferenceHelper().saveUserImage("https://firebasestorage.googleapis.com/v0/b/testlogin-4bbfd.appspot.com/o/image_music.jpg?alt=media&token=b54e2088-59a1-4e92-b67c-b5d88fbb16d9");
+            await SharedpreferenceHelper().saveUserId(id);
         Map<String, dynamic> userInfoMap ={
           "Name": nameController.text,
           "Gmail": emailController.text,
           "Id": id,
           "Image": "https://firebasestorage.googleapis.com/v0/b/testlogin-4bbfd.appspot.com/o/image_music.jpg?alt=media&token=b54e2088-59a1-4e92-b67c-b5d88fbb16d9",
         };
-
+        await DatabaseMethods().addUserDetails(userInfoMap, id);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+          "Registered Successflully",
+          style: TextStyle(fontSize: 20.0),
+        )));
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => Login()));
       } on FirebaseAuthException catch (e) {
