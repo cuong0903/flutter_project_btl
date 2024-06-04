@@ -1,0 +1,43 @@
+name: flutter_project_btl
+description: "A new Flutter project."
+
+# Prevents accidental publishing to pub.dev
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# Version and build number for the application
+version: 1.0.0+1
+
+# Dart SDK version constraints
+environment:
+  sdk: '>=3.4.0-282.3.beta <4.0.0'
+
+# Dependencies required for the project
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Cupertino icons for iOS style icons
+  cupertino_icons: ^1.0.6
+  firebase_core: ^2.32.0
+  cloud_firestore: ^4.17.5
+  firebase_auth: ^4.20.0
+  random_string: ^2.3.1
+  shared_preferences: ^2.2.3
+  crypto: ^3.0.3
+
+# Development dependencies for testing and linting
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Recommended linting rules
+  flutter_lints: ^3.0.0
+
+# Flutter-specific configurations
+flutter:
+  # Ensures Material Icons font is included
+  uses-material-design: true
+
+  # Specifies the assets directory
+  assets:
+    - images/

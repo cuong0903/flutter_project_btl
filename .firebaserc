@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "firebase auth:config:set enableAnonymousUser=true": "flutterbarberbooking-33384"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}
