@@ -8,7 +8,7 @@ import '../services/shared_pred.dart';
 class Booking extends StatefulWidget {
   String service;
 
-  Booking({required this.service});
+  Booking({required this.service, required String price});
 
   @override
   State<Booking> createState() => _BookingState();
@@ -17,7 +17,7 @@ class Booking extends StatefulWidget {
 class _BookingState extends State<Booking> {
 
 
-  String? name, image, email;
+  String? name, image, email, price;
   getthedatafromsharedpred() async{
     name = await SharedpreferenceHelper().getUserName();
     image = await SharedpreferenceHelper().getUserImage();
@@ -67,7 +67,7 @@ class _BookingState extends State<Booking> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF2b1615), // Corrected color code
+      backgroundColor: Color(0xFF7AB9EE), // Corrected color code
       body: Container(
         margin: EdgeInsets.only(left: 10),
         child: Column(
@@ -92,7 +92,7 @@ class _BookingState extends State<Booking> {
             Text(
               "Hãy bắt đầu \ncuộc hành trình",
               style: TextStyle(
-                  color: Colors.white70,
+                  color: Colors.white,
                   fontSize: 28,
                   fontWeight: FontWeight.w500),
             ),
@@ -122,7 +122,7 @@ class _BookingState extends State<Booking> {
             Container(
               padding: EdgeInsets.only(top: 10, bottom: 10.0),
               decoration: BoxDecoration(
-                  color: Color(0xFFb4817e),
+                  color: Colors.red,
                   borderRadius: BorderRadius.circular(20)),
               width: MediaQuery.of(context).size.width,
               child: Column(
@@ -167,7 +167,7 @@ class _BookingState extends State<Booking> {
             Container(
               padding: EdgeInsets.only(top: 10, bottom: 10.0),
               decoration: BoxDecoration(
-                  color: Color(0xFFb4817e),
+                  color: Colors.red,
                   borderRadius: BorderRadius.circular(20)),
               width: MediaQuery.of(context).size.width,
               child: Column(
@@ -217,6 +217,7 @@ class _BookingState extends State<Booking> {
                   "UserName": name,
                   "Image": image,
                   "Email": email,
+                  "Price": price,
 
                 };
                 await DatabaseMethods().addUserBooking(userBookingmap).then((value)=> {

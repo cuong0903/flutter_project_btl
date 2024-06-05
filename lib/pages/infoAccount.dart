@@ -116,8 +116,11 @@ class _InfoaccountState extends State<Infoaccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF7AB9EE),
       body: Container(
+
         child: Column(
+
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -250,11 +253,7 @@ class _InfoaccountState extends State<Infoaccount> {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    Color(0xFFB91635),
-                    Color(0xff621d3c),
-                    Color(0xFF311937)
-                  ]),
+                  color: Colors.red,
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Text(

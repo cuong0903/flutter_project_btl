@@ -21,7 +21,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+backgroundColor: Color(0xFF7AB9EE),
       body: Container(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -111,14 +111,14 @@ class _ChangePasswordState extends State<ChangePassword> {
                   ElevatedButton(
                     onPressed: _isLoading ? null : _changePassword,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFe29452),
+                      backgroundColor: Colors.red,
                       padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     ),
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
                         : const Text(
                       "Đổi mật khẩu",
-                      style: TextStyle(fontSize: 18, color: Colors.white),
+                      style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                   ),
                 ],
@@ -172,7 +172,6 @@ class _ChangePasswordState extends State<ChangePassword> {
             default:
               errorMessage = 'Đã xảy ra lỗi. Vui lòng thử lại.';
           }
-
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(errorMessage)),
           );
@@ -185,7 +184,6 @@ class _ChangePasswordState extends State<ChangePassword> {
           );
         }
       }
-
       setState(() {
         _isLoading = false;
       });

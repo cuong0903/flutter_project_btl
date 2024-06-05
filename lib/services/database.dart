@@ -73,6 +73,29 @@ class DatabaseMethods {
         .update(userAccount);
   }
 
+  // Future getBookings(String id, Map<String, dynamic> userBookingList) async {
+  //   return await FirebaseFirestore.instance
+  //       .collection("Booking")
+  //       .doc(id)
+  //       .update(userBookingList);
+  // }
+  Future<Map<String, dynamic>?> getBooking(String bookingId) async {
+    try {
+      DocumentSnapshot bookingSnapshot = await FirebaseFirestore.instance
+          .collection("Booking")
+          .doc(bookingId)
+          .get();
+
+      if (bookingSnapshot.exists) {
+        return bookingSnapshot.data() as Map<String, dynamic>;
+      }
+      return null;
+    } catch (e) {
+      print("Error getting booking: $e");
+      return null;
+    }
+  }
+
 
 
 

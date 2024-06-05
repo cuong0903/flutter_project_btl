@@ -14,13 +14,13 @@ class _OnboardingState extends State<Onboarding> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF2b1615), // Corrected color code
+      backgroundColor: Color(0xFFB48A6E), // Corrected color code
       body: Container(
         margin: EdgeInsets.only(top: 120.0),
         child: Column(
           children: [
             SizedBox(height: 50.0,),
-            Image.asset('images/barber.png'),
+            Image.asset('images/barber_preview_rev.png'),
             SizedBox(height: 50.0,),
             
             GestureDetector(
