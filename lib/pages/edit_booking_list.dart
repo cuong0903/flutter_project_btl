@@ -45,7 +45,7 @@ class _EditBookingPageState extends State<EditBookingPage> {
       });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Đã cập nhật lịch đặt')));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Vui lòng điền đầy đủ thông tin')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Vui lòng điền đầy đủ thông tin cần thiết')));
     }
   }
 
