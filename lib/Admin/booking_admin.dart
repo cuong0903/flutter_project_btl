@@ -36,7 +36,7 @@ class _BookingAdminState extends State<BookingAdmin> {
         int.parse(dateParts[0]),
       );
     } catch (e) {
-      print("Error parsing date: $e");
+      print("Lỗi ngày giờ: $e");
     }
 
     try {
@@ -46,19 +46,19 @@ class _BookingAdminState extends State<BookingAdmin> {
         minute: int.parse(timeParts[1].split(' ')[0]),
       );
     } catch (e) {
-      print("Error parsing time: $e");
+      print("Lỗi thời gian: $e");
     }
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Edit Booking"),
+          title: Text("Sửa lịch"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                decoration: InputDecoration(labelText: "Service"),
+                decoration: InputDecoration(labelText: "Dịch vụ"),
                 onChanged: (value) => updatedService = value,
                 controller: TextEditingController(text: updatedService),
               ),
@@ -94,11 +94,11 @@ class _BookingAdminState extends State<BookingAdmin> {
           ),
           actions: [
             TextButton(
-              child: Text("Cancel"),
+              child: Text("Quay lại"),
               onPressed: () => Navigator.of(context).pop(),
             ),
             TextButton(
-              child: Text("Save"),
+              child: Text("Lưu"),
               onPressed: () async {
                 await DatabaseMethods().updateBooking(ds.id, {
                   "Service": updatedService,
@@ -157,14 +157,14 @@ class _BookingAdminState extends State<BookingAdmin> {
                       ],
                     ),
                     SizedBox(height: 10.0),
-                    Text("Service: " + ds["Service"],
+                    Text("Loại dịch vụ: " + ds["Service"],
                         style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold)),
                     SizedBox(height: 5.0),
-                    Text("Name: " + ds["UserName"],
+                    Text("Tên khách hàng: " + ds["UserName"],
                         style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold)),
-                    Text("Date: " + ds["Date"],
+                    Text("Ngày: " + ds["Date"],
                         style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold)),
-                    Text("Time: " + ds["Time"],
+                    Text("Giờ: " + ds["Time"],
                         style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold)),
                     SizedBox(height: 20.0),
                     Row(
@@ -175,12 +175,12 @@ class _BookingAdminState extends State<BookingAdmin> {
                             await DatabaseMethods().DeleteBooking(ds.id);
                           },
                           style: ElevatedButton.styleFrom(backgroundColor: Color(0xFFdf711a)),
-                          child: Text("Done", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                          child: Text("Hoàn thành", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                         ),
                         ElevatedButton(
                           onPressed: () => _showEditDialog(ds),
                           style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                          child: Text("Edit", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                          child: Text("Sửa", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                         ),
                       ],
                     ),
@@ -200,7 +200,7 @@ class _BookingAdminState extends State<BookingAdmin> {
     return Scaffold(
       backgroundColor: Color(0xFF2b1615),
       appBar: AppBar(
-        title: Text("All Bookings", style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold)),
+        title: Text("Tất cả lịch", style: TextStyle(color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold)),
         backgroundColor: Color(0xFF2b1615),
         elevation: 0,
       ),

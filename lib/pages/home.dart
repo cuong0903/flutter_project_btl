@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_project_btl/Admin/admin_login.dart';
 import 'package:flutter_project_btl/pages/booking.dart';
 import 'package:flutter_project_btl/pages/infoAccount.dart';
+import 'package:flutter_project_btl/pages/resetPassword.dart';
 import 'package:flutter_project_btl/services/shared_pred.dart';
 
 import 'login.dart';
@@ -19,7 +20,7 @@ class _HomeState extends State<Home> {
   getthedatafromsharedpred() async{
     name = await SharedpreferenceHelper().getUserName();
     image = await SharedpreferenceHelper().getUserImage();
-    id = await SharedpreferenceHelper().getUserId();
+    id = await SharedpreferenceHelper().getUserId(); // Thêm dòng này
     setState(() {
 
     });
@@ -51,10 +52,10 @@ class _HomeState extends State<Home> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Hello, ", style: TextStyle(color: Color.fromARGB(197,255, 255, 255),
+                    Text("Xin chào, ", style: TextStyle(color: Color.fromARGB(197,255, 255, 255),
                         fontSize: 20.0,
                         fontWeight: FontWeight.w500),),
-                    Text(name ?? '', style: TextStyle(color: Colors.white,
+                    Text(name!, style: TextStyle(color: Colors.white,
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold),)
                   ],
@@ -101,7 +102,7 @@ class _HomeState extends State<Home> {
                                 leading: Icon(Icons.lock),
                                 title: Text('Đổi mật khẩu'),
                                 onTap: () {
-                                  // Thực hiện hành động khi người dùng chọn mục menu
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=> ChangePassword(userId: id ?? '',)));
                                 },
                               ),
                             ),
@@ -121,7 +122,9 @@ class _HomeState extends State<Home> {
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
-                        child: image != null ? Image.network(image!, height: 60, width: 60, fit: BoxFit.cover) : SizedBox(),
+                        child: image != null ? Image.network(image!, height: 60, width: 60, fit: BoxFit.cover) :
+                        Image.asset("images/images.jpg")
+
                       ),
                     ),
                   ],
@@ -137,7 +140,7 @@ class _HomeState extends State<Home> {
               color: Colors.white30,
             ),
             SizedBox(height: 20.0,),
-            Text("Service", style: TextStyle(color: Colors.white,
+            Text("Dịch vụ", style: TextStyle(color: Colors.white,
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold),),
             SizedBox(height: 20.0,),
@@ -147,7 +150,7 @@ class _HomeState extends State<Home> {
                   fit: FlexFit.tight,
                   child: GestureDetector(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Booking(service: 'Classic shaving')));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Booking(service: 'Cạo râu')));
                     },
                     child: Container(
                         height: 150,
@@ -159,7 +162,7 @@ class _HomeState extends State<Home> {
                           children: [
                             Image.asset('images/shaving.png', height: 80,width: 80, fit: BoxFit.cover,),
                             SizedBox(height: 10.0,),
-                            Text("Classic shaving", style: TextStyle(color: Colors.white,
+                            Text("Cạo râu ", style: TextStyle(color: Colors.white,
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold),),
                           ],
@@ -172,7 +175,7 @@ class _HomeState extends State<Home> {
                   fit: FlexFit.tight,
                   child: GestureDetector(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Booking(service: 'Hair  Washing')));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Booking(service: 'Gội đầu')));
                     },
                     child: Container(
                         height: 150,
@@ -184,7 +187,7 @@ class _HomeState extends State<Home> {
                           children: [
                             Image.asset('images/hair.png', height: 80,width: 80, fit: BoxFit.cover,),
                             SizedBox(height: 10,),
-                            Text("Hair  Washing", style: TextStyle(color: Colors.white,
+                            Text("Gội đầu", style: TextStyle(color: Colors.white,
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold),),
                           ],
@@ -201,7 +204,7 @@ class _HomeState extends State<Home> {
                   fit: FlexFit.tight,
                   child: GestureDetector(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Booking(service: 'Classic shaving')));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Booking(service: 'Cắt tóc')));
                     },
                     child: Container(
                         height: 150,
@@ -213,7 +216,7 @@ class _HomeState extends State<Home> {
                           children: [
                             Image.asset('images/cutting.png', height: 80,width: 80, fit: BoxFit.cover,),
                             SizedBox(height: 10.0,),
-                            Text("Hair cutting", style: TextStyle(color: Colors.white,
+                            Text("Cắt tóc", style: TextStyle(color: Colors.white,
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold),),
                           ],
@@ -224,21 +227,26 @@ class _HomeState extends State<Home> {
                 SizedBox(width: 20,),
                 Flexible(
                   fit: FlexFit.tight,
-                  child: Container(
-                      height: 150,
-                      decoration: BoxDecoration(
-                          color: Color(0xFFe29452), borderRadius: BorderRadius.circular(20)
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset('images/beard.png', height: 80,width: 80, fit: BoxFit.cover,),
-                          SizedBox(height: 10,),
-                          Text("Beard  Trimming", style: TextStyle(color: Colors.white,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),),
-                        ],
-                      )
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Booking(service: 'Cắt tỉa râu công nghệ')));
+                    },
+                    child: Container(
+                        height: 150,
+                        decoration: BoxDecoration(
+                            color: Color(0xFFe29452), borderRadius: BorderRadius.circular(20)
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset('images/beard.png', height: 80,width: 80, fit: BoxFit.cover,),
+                            SizedBox(height: 10,),
+                            Text("Cắt tỉa râu công nghệ", style: TextStyle(color: Colors.white,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold),),
+                          ],
+                        )
+                    ),
                   ),
                 ),
               ],
@@ -248,41 +256,51 @@ class _HomeState extends State<Home> {
               children: [
                 Flexible(
                   fit: FlexFit.tight,
-                  child: Container(
-                      height: 150,
-                      decoration: BoxDecoration(
-                          color: Color(0xFFe29452), borderRadius: BorderRadius.circular(20)
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset('images/facials.png', height: 80,width: 80, fit: BoxFit.cover,),
-                          SizedBox(height: 10.0,),
-                          Text("Facials", style: TextStyle(color: Colors.white,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),),
-                        ],
-                      )
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Booking(service: 'Chăm sóc da mặt')));
+                    },
+                    child: Container(
+                        height: 150,
+                        decoration: BoxDecoration(
+                            color: Color(0xFFe29452), borderRadius: BorderRadius.circular(20)
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset('images/facials.png', height: 80,width: 80, fit: BoxFit.cover,),
+                            SizedBox(height: 10.0,),
+                            Text("Chăm sóc da mặt", style: TextStyle(color: Colors.white,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold),),
+                          ],
+                        )
+                    ),
                   ),
                 ),
                 SizedBox(width: 20,),
                 Flexible(
                   fit: FlexFit.tight,
-                  child: Container(
-                      height: 150,
-                      decoration: BoxDecoration(
-                          color: Color(0xFFe29452), borderRadius: BorderRadius.circular(20)
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset('images/kids.png', height: 80,width: 80, fit: BoxFit.cover,),
-                          SizedBox(height: 10,),
-                          Text("Kids HairCutting", style: TextStyle(color: Colors.white,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),),
-                        ],
-                      )
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Booking(service: 'Cắt tóc trẻ em')));
+                    },
+                    child: Container(
+                        height: 150,
+                        decoration: BoxDecoration(
+                            color: Color(0xFFe29452), borderRadius: BorderRadius.circular(20)
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset('images/kids.png', height: 80,width: 80, fit: BoxFit.cover,),
+                            SizedBox(height: 10,),
+                            Text("Cắt tóc trẻ em", style: TextStyle(color: Colors.white,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold),),
+                          ],
+                        )
+                    ),
                   ),
                 ),
               ],

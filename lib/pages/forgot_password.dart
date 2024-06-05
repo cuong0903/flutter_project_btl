@@ -47,7 +47,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             Container(
               alignment: Alignment.topCenter,
               child: Text(
-                "Password Recovery",
+                "Khôi phục mật khẩu",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -57,7 +57,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             ),
             SizedBox(height: 10.0),
             Text(
-              "Enter your email",
+              "Vui lòng nhập Email",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -78,7 +78,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   controller: mailController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter email';
+                      return 'Vui lòng nhập gmail';
                     }
                     return null;
                   },
@@ -118,7 +118,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  "Send Email",
+                  "Gửi Email",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,

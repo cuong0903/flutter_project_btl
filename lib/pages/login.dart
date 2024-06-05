@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project_btl/pages/forgot_password.dart';
 import 'package:flutter_project_btl/pages/signup.dart';
+import 'package:flutter_project_btl/services/database.dart';
+import 'package:flutter_project_btl/services/shared_pred.dart';
 
 import 'home.dart';
 
@@ -13,7 +15,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  String? mail, password;
+  String? mail, password, id;
 
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
@@ -22,20 +24,28 @@ class _LoginState extends State<Login> {
 
   userLogin() async {
     try {
-      await FirebaseAuth.instance
+      UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: mail!, password: password!);
+
+      Map<String, dynamic>? userInfo = await DatabaseMethods().getUserInfoByEmail(mail!);
+      if (userInfo != null) {
+        await SharedpreferenceHelper().saveUserName(userInfo["Name"]);
+        await SharedpreferenceHelper().saveUserId(userInfo["Id"]);
+        await SharedpreferenceHelper().saveUserImage(userInfo["Image"]);
+        // Lưu thêm thông tin khác nếu cần
+      }
       Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
-          "No user Found that Email",
+          "Không có người dùng Tìm thấy Email đó",
           style: TextStyle(fontSize: 18.0, color: Colors.black),
         )));
       } else if (e.code == 'wrong-password') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
-          "Wrong Password Provided by User",
+          "Mật khẩu sai do người dùng cung cấp",
           style: TextStyle(fontSize: 18.0, color: Colors.black),
         )));
       }
@@ -96,7 +106,7 @@ class _LoginState extends State<Login> {
                     TextFormField(
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please Enter Gmail";
+                          return "Vui lòng nhập Gmail";
                         }
                         return null;
                       },
@@ -118,7 +128,7 @@ class _LoginState extends State<Login> {
                     TextFormField(
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please Enter Password";
+                          return "Vui lòng nhập Mật khẩu";
                         }
                         return null;
                       },
@@ -140,7 +150,7 @@ class _LoginState extends State<Login> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            "Forgot Password ?",
+                            "Quên mật khẩu ?",
                             style: TextStyle(
                                 color: Color(0xFF311937),
                                 fontSize: 18,
@@ -174,7 +184,7 @@ class _LoginState extends State<Login> {
                               borderRadius: BorderRadius.circular(30)),
                           child: Center(
                               child: Text(
-                            'SIGN IN',
+                            'Đăng nhập',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 24,
@@ -186,7 +196,7 @@ class _LoginState extends State<Login> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          "Don't have account?",
+                          "Nếu chưa có tài khoản?",
                           style: TextStyle(
                               color: Color(0xFF311937),
                               fontSize: 17.0,
@@ -202,7 +212,7 @@ class _LoginState extends State<Login> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            "Sign Up",
+                            "Đăng ký",
                             style: TextStyle(
                                 color: Color(0xff621d3c),
                                 fontSize: 20.0,

@@ -39,4 +39,41 @@ class DatabaseMethods {
         .doc(id)
         .get(); // Thêm .get() để trả về DocumentSnapshot
   }
+
+  Future updatePassword(String id, Map<String, dynamic> updatedPassword) async {
+    return await FirebaseFirestore.instance
+        .collection("users")
+        .doc(id)
+        .update(updatedPassword);
+  }
+
+  Future<Map<String, dynamic>> getUserDetails(String userId) async {
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    return userDoc.data() as Map<String, dynamic>;
+  }
+
+
+  Future<Map<String, dynamic>?> getUserInfoByEmail(String email) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .where("Gmail", isEqualTo: email)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      return querySnapshot.docs.first.data() as Map<String, dynamic>;
+    }
+
+    return null;
+  }
+
+  Future getAndUpUsers(String id, Map<String, dynamic> userAccount) async {
+    return await FirebaseFirestore.instance
+        .collection("users")
+        .doc(id)
+        .update(userAccount);
+  }
+
+
+
+
 }

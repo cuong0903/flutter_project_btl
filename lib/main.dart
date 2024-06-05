@@ -5,6 +5,7 @@ import 'package:flutter_project_btl/pages/forgot_password.dart';
 import 'package:flutter_project_btl/pages/home.dart';
 import 'package:flutter_project_btl/pages/infoAccount.dart';
 import 'package:flutter_project_btl/pages/login.dart';
+import 'package:flutter_project_btl/pages/resetPassword.dart';
 import 'package:flutter_project_btl/pages/signup.dart';
 import 'pages/onboarding.dart';// Adjust the import path
 import 'package:firebase_core/firebase_core.dart';
@@ -48,6 +49,5 @@ class MyApp extends StatelessWidget {
       home: Home(),
     );
   }
-
 
 }

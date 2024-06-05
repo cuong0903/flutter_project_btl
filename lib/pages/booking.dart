@@ -90,7 +90,7 @@ class _BookingState extends State<Booking> {
               height: 30.0,
             ),
             Text(
-              "Let's the\n journey begin",
+              "Hãy bắt đầu \ncuộc hành trình",
               style: TextStyle(
                   color: Colors.white70,
                   fontSize: 28,
@@ -127,7 +127,7 @@ class _BookingState extends State<Booking> {
               width: MediaQuery.of(context).size.width,
               child: Column(
                 children: [
-                  Text("Set a Date ",
+                  Text("Đặt ngày ",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 20.0,
@@ -172,7 +172,7 @@ class _BookingState extends State<Booking> {
               width: MediaQuery.of(context).size.width,
               child: Column(
                 children: [
-                  Text("Set a Time ",
+                  Text("Đặt giờ ",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 20.0,
@@ -222,7 +222,7 @@ class _BookingState extends State<Booking> {
                 await DatabaseMethods().addUserBooking(userBookingmap).then((value)=> {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(
-                "Service has been booked Successflully!!!",
+                "Dịch vụ đã được đặt thành công!!!",
                 style: TextStyle(fontSize: 20.0),)))
                 });
               },
@@ -233,7 +233,7 @@ class _BookingState extends State<Booking> {
                     color: Color(0xFFfe8f33), borderRadius: BorderRadius.circular(20)
                 ),
                 child:  Center(
-                  child: Text("Book Now", style: TextStyle(
+                  child: Text("Đặt ngay", style: TextStyle(
                       color: Colors.white,
                       fontSize: 22.0,
                       fontWeight: FontWeight.bold),

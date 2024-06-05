@@ -24,6 +24,8 @@ dependencies:
   random_string: ^2.3.1
   shared_preferences: ^2.2.3
   crypto: ^3.0.3
+  image_picker: ^1.1.2
+  firebase_storage: ^11.7.7
 
 # Development dependencies for testing and linting
 dev_dependencies:

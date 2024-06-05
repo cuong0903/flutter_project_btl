@@ -32,19 +32,19 @@ class _SignupState extends State<Signup> {
             await SharedpreferenceHelper().saveUserName(nameController.text);
             await SharedpreferenceHelper().saveUserGmail(emailController.text);
             await SharedpreferenceHelper().saveUserPhoneNumber(phonenumberController.text);
-            await SharedpreferenceHelper().saveUserImage("https://firebasestorage.googleapis.com/v0/b/testlogin-4bbfd.appspot.com/o/image_music.jpg?alt=media&token=b54e2088-59a1-4e92-b67c-b5d88fbb16d9");
+            await SharedpreferenceHelper().saveUserImage("https://firebasestorage.googleapis.com/v0/b/test-d5ce8.appspot.com/o/images.png?alt=media&token=b364f1ff-b8df-49ff-92cb-f7c1760e331a");
             await SharedpreferenceHelper().saveUserId(id);
         Map<String, dynamic> userInfoMap ={
           "Name": nameController.text,
           "Gmail": emailController.text,
           "Id": id,
-          "Number phone" :phonenumberController.text,
-          "Image": "https://firebasestorage.googleapis.com/v0/b/testlogin-4bbfd.appspot.com/o/image_music.jpg?alt=media&token=b54e2088-59a1-4e92-b67c-b5d88fbb16d9",
+          "NumberPhone" :phonenumberController.text,
+          "Image": "https://firebasestorage.googleapis.com/v0/b/test-d5ce8.appspot.com/o/images.png?alt=media&token=b364f1ff-b8df-49ff-92cb-f7c1760e331a",
         };
         await DatabaseMethods().addUserDetails(userInfoMap, id);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
-          "Registered Successflully",
+          "Đã đăng ký thành công",
           style: TextStyle(fontSize: 20.0),
         )));
         Navigator.push(
@@ -53,13 +53,13 @@ class _SignupState extends State<Signup> {
         if (e.code == 'weak-password') {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
-            "Password Provided is too weak",
+            "Mật khẩu được cung cấp quá yếu",
             style: TextStyle(fontSize: 20.0),
           )));
         } else if(e.code=="email-already-in-use"){
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
-              "Account Already exits",
+              "Tài khoản đã tồn tại",
               style: TextStyle(fontSize: 20.0),)));
         }
       }
@@ -120,7 +120,7 @@ class _SignupState extends State<Signup> {
                     TextFormField(
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please Enter Name";
+                          return "Vui lòng nhập tên";
                         }
                         return null;
                       },
@@ -142,7 +142,7 @@ class _SignupState extends State<Signup> {
                     TextFormField(
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please Enter Gmail";
+                          return "Vui lòng nhập Gmail";
                         }
                         return null;
                       },
@@ -164,7 +164,7 @@ class _SignupState extends State<Signup> {
                     TextFormField(
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please Enter Phone number";
+                          return "Vui lòng nhập Số điện thoại";
                         }
                         return null;
                       },
@@ -186,7 +186,7 @@ class _SignupState extends State<Signup> {
                     TextFormField(
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please Enter Password";
+                          return "Vui lòng nhập Mật khẩu";
                         }
                         return null;
                       },
@@ -223,7 +223,7 @@ class _SignupState extends State<Signup> {
                               borderRadius: BorderRadius.circular(30)),
                           child: Center(
                               child: Text(
-                            'SIGN UP',
+                            'Đăng ký',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 24,
@@ -235,7 +235,7 @@ class _SignupState extends State<Signup> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          "Already have an account?",
+                          "Bạn đã có tài khoản chưa?",
                           style: TextStyle(
                               color: Color(0xFF311937),
                               fontSize: 17.0,
@@ -252,7 +252,7 @@ class _SignupState extends State<Signup> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            "Sign In",
+                            "Đăng nhập",
                             style: TextStyle(
                                 color: Color(0xff621d3c),
                                 fontSize: 20.0,

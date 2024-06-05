@@ -32,7 +32,7 @@ class UserService {
 
       return true;
     } catch (e) {
-      print("Error registering user: $e");
+      print("Lỗi đăng ký người dùng: $e");
       return false;
     }
   }
@@ -50,7 +50,7 @@ class UserService {
       }
       return null;
     } catch (e) {
-      print("Error logging in user: $e");
+      print("Lỗi đăng nhập người dùng: $e");
       return null;
     }
   }

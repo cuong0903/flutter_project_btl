@@ -72,7 +72,7 @@ class _AdminLoginState extends State<AdminLogin> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "UserName",
+                      "Tên tài khoản",
                       style: TextStyle(
                           color: Color(0xFFB91635),
                           fontSize: 25,
@@ -82,14 +82,14 @@ class _AdminLoginState extends State<AdminLogin> {
 
                       controller: usernamecontroller,
                       decoration: InputDecoration(
-                          hintText: "UserName",
+                          hintText: "Tên tài khoản",
                           prefixIcon: Icon(Icons.mail_outline)),
                     ),
                     SizedBox(
                       height: 40,
                     ),
                     Text(
-                      "Password",
+                      "Mật khẩu",
                       style: TextStyle(
                           color: Color(0xFFB91635),
                           fontSize: 25,
@@ -99,7 +99,7 @@ class _AdminLoginState extends State<AdminLogin> {
 
                       controller: userpasswordcontroller,
                       decoration: InputDecoration(
-                        hintText: "Password",
+                        hintText: "Mật khẩu",
                         prefixIcon: Icon(Icons.password_outlined),
                       ),
                       obscureText: true,
@@ -126,7 +126,7 @@ class _AdminLoginState extends State<AdminLogin> {
                               borderRadius: BorderRadius.circular(30)),
                           child: Center(
                               child: Text(
-                                'SIGN IN',
+                                'Đăng nhập',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 24,
@@ -148,14 +148,14 @@ class _AdminLoginState extends State<AdminLogin> {
         if (doc.data()['id'] != usernamecontroller.text.trim()) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
-                "Your id is not corrent",
+                "Id của bạn không đúng",
                 style: TextStyle(fontSize: 20.0),
               )));
         }
         else if (doc.data()['password'] != userpasswordcontroller.text.trim()) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
-                "Your password is not corrent",
+                "Mật khẩu của bạn không đúng",
                 style: TextStyle(fontSize: 20.0),
               )));
         }
