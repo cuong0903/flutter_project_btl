@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class DatabaseMethods {
   Future addUserDetails(Map<String, dynamic> userInfoMap, String id) async {
@@ -95,6 +96,36 @@ class DatabaseMethods {
       return null;
     }
   }
+
+
+  Future<bool> isTimeSlotAvailable(DateTime date, TimeOfDay time) async {
+    DateTime startTime = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+    DateTime endTime = startTime.add(Duration(minutes: 30));
+
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("Booking")
+        .where("Date", isEqualTo: "${date.day}/${date.month}/${date.year}")
+        .get();
+
+    for (var doc in querySnapshot.docs) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      String timeString = data['Time'];
+      List<String> timeParts = timeString.split(':');
+      int hour = int.parse(timeParts[0]);
+      int minute = int.parse(timeParts[1].split(' ')[0]);
+      bool isPM = timeString.contains('PM');
+      if (isPM && hour != 12) hour += 12;
+      if (!isPM && hour == 12) hour = 0;
+
+      DateTime bookingTime = DateTime(date.year, date.month, date.day, hour, minute);
+      if ((bookingTime.isAfter(startTime) && bookingTime.isBefore(endTime)) ||
+          (bookingTime.isAtSameMomentAs(startTime) || bookingTime.isAtSameMomentAs(endTime))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 
 
 

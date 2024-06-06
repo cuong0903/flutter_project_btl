@@ -98,6 +98,7 @@ class _BookingListState extends State<BookingList> {
                       _buildInfoRow(
                           Icons.calendar_today, "Ngày: " + ds["Date"]),
                       _buildInfoRow(Icons.access_time, "Giờ: " + ds["Time"]),
+                      _buildInfoRow(Icons.price_change_outlined, "Price: " + ds["Price"]),
                       SizedBox(height: 20.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

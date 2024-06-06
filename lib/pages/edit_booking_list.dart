@@ -15,6 +15,7 @@ class _EditBookingPageState extends State<EditBookingPage> {
   TextEditingController _dateController = TextEditingController();
   TextEditingController _timeController = TextEditingController();
 
+
   @override
   void initState() {
     super.initState();
@@ -28,6 +29,7 @@ class _EditBookingPageState extends State<EditBookingPage> {
         _serviceController.text = bookingData["Service"] ?? "";
         _dateController.text = bookingData["Date"] ?? "";
         _timeController.text = bookingData["Time"] ?? "";
+
       });
     }
   }
@@ -42,6 +44,7 @@ class _EditBookingPageState extends State<EditBookingPage> {
         "Service": service,
         "Date": date,
         "Time": time,
+
       });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Đã cập nhật lịch đặt')));
     } else {

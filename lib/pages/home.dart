@@ -16,6 +16,21 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String? name, image, id, price;
+
+  // Declare defaultServicePrices as a class member
+  final Map<String, String> defaultServicePrices = {
+    'Cạo râu': '50,000 VND',
+    'Gội đầu': '30,000 VND',
+    'Cắt tóc': '70,000 VND',
+    'Cắt tỉa râu công nghệ': '80,000 VND',
+    'Chăm sóc da mặt': '120,000 VND',
+    'Cắt tóc trẻ em': '60,000 VND',
+  };
+
+  // Declare servicePrices as a class member
+  late Map<String, String> servicePrices;
+
+  // Hàm lấy dữ liệu từ SharedPreferences
   getthedatafromsharedpred() async {
     name = await SharedpreferenceHelper().getUserName();
     image = await SharedpreferenceHelper().getUserImage();
@@ -23,8 +38,11 @@ class _HomeState extends State<Home> {
     setState(() {});
   }
 
+  // Hàm gọi khi widget được tạo
   getontheload() async {
     await getthedatafromsharedpred();
+    // Initialize servicePrices in getontheload method
+    servicePrices = Map.from(defaultServicePrices);
     setState(() {});
   }
 
@@ -33,14 +51,6 @@ class _HomeState extends State<Home> {
     getontheload();
     super.initState();
   }
-  final Map<String, String> servicePrices = {
-    'Cạo râu': '50,000 VND',
-    'Gội đầu': '30,000 VND',
-    'Cắt tóc': '70,000 VND',
-    'Cắt tỉa râu công nghệ': '80,000 VND',
-    'Chăm sóc da mặt': '120,000 VND',
-    'Cắt tóc trẻ em': '60,000 VND',
-  };
 
 
   @override
@@ -123,6 +133,7 @@ class _HomeState extends State<Home> {
     );
   }
 
+  // Widget cho thẻ dịch vụ
   Widget _buildServiceCard(String title, String imagePath, Color color, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
@@ -138,6 +149,8 @@ class _HomeState extends State<Home> {
             Image.asset(imagePath, height: 80, width: 80, fit: BoxFit.cover),
             SizedBox(height: 10.0),
             Text(title, textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold)),
+            // Hiển thị giá của dịch vụ
+            Text(servicePrices[title] ?? 'Giá không xác định', style: TextStyle(color: Colors.white, fontSize: 14.0)),
           ],
         ),
       ),
@@ -157,6 +170,7 @@ class _HomeState extends State<Home> {
     );
   }
 
+  // Hàm điều hướng đến trang đặt dịch vụ
   void _navigateToBooking(String service) {
     Navigator.push(
       context,
