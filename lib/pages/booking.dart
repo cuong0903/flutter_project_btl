@@ -10,28 +10,28 @@
   class Booking extends StatefulWidget {
 
     final String service;
-    final String price; // Receive the price as a parameter
+    final String price;// Nhận giá dịch vụ như một tham số
 
-    Booking({required this.service, required this.price}); // Update the constructor
+    Booking({required this.service, required this.price});  // Cập nhật constructor
 
     @override
     State<Booking> createState() => _BookingState();
   }
 
   class _BookingState extends State<Booking> {
-    Stream? stylistStream;
+    Stream? stylistStream;// Stream để lắng nghe danh sách stylist
 
     String? name, image,  price, NameWork;
-    bool isExpanded = false;
-    Map<String, dynamic>? selectedStylist;
+    bool isExpanded = false;// Biến để kiểm soát trạng thái mở rộng của danh sách stylist
+    Map<String, dynamic>? selectedStylist;// Thông tin của stylist được chọn
 
-
+    // Hàm lấy dữ liệu khi widget được tạo
     getOnLoad() async {
-      getthedatafromsharedpred();
-      stylistStream = await DatabaseMethods().getStylist();
+      getthedatafromsharedpred(); // Lấy dữ liệu từ SharedPreferences
+      stylistStream = await DatabaseMethods().getStylist(); // Lấy dữ liệu Stylist từ Firestore
       setState(() {});
     }
-
+    // Hàm lấy dữ liệu từ SharedPreferences
     getthedatafromsharedpred() async{
       name = await SharedpreferenceHelper().getUserName();
       image = await SharedpreferenceHelper().getUserImage();
@@ -39,19 +39,87 @@
 
       });
     }
+     // Hàm lấy dữ liệu khi widget được tạo
     getontheload() async{
       await getthedatafromsharedpred();
       setState(() {
 
       });
     }
+
     @override
     void initState(){
       getontheload();
       getOnLoad();
       super.initState();
     }
+    TimeOfDay _selectedTime = TimeOfDay.now();
+    // Hàm để chọn thời gian
+    Future<void> _selectTime(BuildContext context) async {
+      final DateTime now = DateTime.now();
+      final DateTime initialDateTime = now.add(Duration(minutes: 30));
 
+      final TimeOfDay initialTime = TimeOfDay.fromDateTime(initialDateTime);
+
+      final TimeOfDay? picked = await showTimePicker(
+        context: context,
+        initialTime: initialTime.replacing(minute: initialTime.minute ~/ 30 * 30), // Làm tròn giờ xuống để bắt đầu từ giờ chẵn
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true), // Hiển thị định dạng 24 giờ
+            child: child ?? SizedBox(),
+          );
+        },
+      );
+
+      if (picked != null && picked != _selectedTime) {
+        setState(() {
+          _selectedTime = picked;
+        });
+      }
+    }
+
+     DateTime _selectedDate = DateTime.now();
+
+    // hàm chọn ngày
+    Future<void> _selectDate(BuildContext context) async {
+      final DateTime now = DateTime.now();
+      final DateTime initialDateTime = now.add(Duration(minutes: 30));
+
+      final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: now,
+        firstDate: now,
+        initialDatePickerMode: DatePickerMode.day, // Hiển thị chế độ chọn ngày
+        initialEntryMode: DatePickerEntryMode.calendarOnly, // Hiển thị lịch ban đầu
+        builder: (context, child) {
+          return Theme(
+            data: ThemeData.light().copyWith(
+              colorScheme: ColorScheme.light(
+                primary: Colors.red, // Đổi màu tiêu đề của DatePicker
+                onPrimary: Colors.white, // Đổi màu chữ của tiêu đề
+                onSurface: Colors.black, // Đổi màu chữ khi chọn ngày
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.red, // Đổi màu chữ của nút
+                ),
+              ),
+            ),
+            child: child ?? SizedBox(),
+          );
+        },
+        lastDate: DateTime(2025),
+      );
+
+      if (picked != null && picked != _selectedDate) {
+        setState(() {
+          _selectedDate = picked;
+        });
+      }
+    }
+
+ // Widget hiển thị danh sách Stylist
     Widget stylist() {
       return Container(
         child: Column(
@@ -160,7 +228,7 @@
               )
                   : Container(),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 10),
             if (selectedStylist != null)
               Container(
                 decoration: BoxDecoration(color: Colors.indigo, borderRadius: BorderRadius.circular(30)),
@@ -219,110 +287,47 @@
       );
     }
 
-
-
-
-    DateTime _selectedDate = DateTime.now();
-
-    Future<void> _selectDate(BuildContext context) async {
-      final DateTime now = DateTime.now();
-      final DateTime initialDateTime = now.add(Duration(minutes: 30));
-
-      final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: now,
-        firstDate: now,
-        initialDatePickerMode: DatePickerMode.day, // Hiển thị chế độ chọn ngày
-        initialEntryMode: DatePickerEntryMode.calendarOnly, // Hiển thị lịch ban đầu
-        builder: (context, child) {
-          return Theme(
-            data: ThemeData.light().copyWith(
-              colorScheme: ColorScheme.light(
-                primary: Colors.red, // Đổi màu tiêu đề của DatePicker
-                onPrimary: Colors.white, // Đổi màu chữ của tiêu đề
-                onSurface: Colors.black, // Đổi màu chữ khi chọn ngày
-              ),
-              textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.red, // Đổi màu chữ của nút
-                ),
-              ),
-            ),
-            child: child ?? SizedBox(),
-          );
-        },
-        lastDate: DateTime(2025),
-      );
-
-      if (picked != null && picked != _selectedDate) {
-        setState(() {
-          _selectedDate = picked;
-        });
-      }
-    }
-
-    TimeOfDay _selectedTime = TimeOfDay.now();
-    Future<void> _selectTime(BuildContext context) async {
-      final DateTime now = DateTime.now();
-      final DateTime initialDateTime = now.add(Duration(minutes: 30));
-
-      final TimeOfDay initialTime = TimeOfDay.fromDateTime(initialDateTime);
-
-      final TimeOfDay? picked = await showTimePicker(
-        context: context,
-        initialTime: initialTime.replacing(minute: initialTime.minute ~/ 30 * 30), // Làm tròn giờ xuống để bắt đầu từ giờ chẵn
-        builder: (context, child) {
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true), // Hiển thị định dạng 24 giờ
-            child: child ?? SizedBox(),
-          );
-        },
-      );
-
-      if (picked != null && picked != _selectedTime) {
-        setState(() {
-          _selectedTime = picked;
-        });
-      }
-    }
-
+// Hàm này hiển thị một hộp thoại xác nhận thông tin đặt lịch, bao gồm dịch vụ, giá, thời gian và thông tin Stylist.
     Future<void> _showConfirmationDialog() async {
-      return showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Xác nhận đặt lịch'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Text('Bạn có chắc chắn muốn đặt lịch không?'),
-                  Text('Dịch vụ: ${widget.service}'),
-                  Text('Ngày: ${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}'),
-                  Text('Giờ: ${_selectedTime.format(context)}'),
-                  Text('Tên thợ: ${selectedStylist?['NameWork'] ?? 'Không chọn'}'),
-                ],
-              ),
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Xác nhận đặt lịch'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Bạn có chắc chắn muốn đặt lịch không?'),
+                Text('Dịch vụ: ${widget.service}'),
+                Text('Giá:' + widget.price),
+                Text('Ngày: ${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}'),
+                Text('Giờ: ${_selectedTime.format(context)}'),
+                Text('Tên thợ: ${selectedStylist?['NameWork'] ?? 'Không chọn'}'),
+              ],
             ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Hủy'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Đồng ý'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _checkAvailabilityAndBook();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Hủy'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Đồng ý'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _checkAvailabilityAndBook();
+              },
+            ),
+          ],
+        );
+      },
+    );
+}
+
+    // Hàm này kiểm tra xem thời gian đã chọn có khả dụng không dựa trên dữ liệu trong Firestore về các lịch đặt trước.
     Future<bool> isTimeSlotAvailable(DateTime date, TimeOfDay time) async {
       DateTime startTime = DateTime(date.year, date.month, date.day, time.hour, time.minute);
       DateTime endTime = startTime.add(Duration(minutes: 30));
@@ -353,7 +358,7 @@
       }
       return true;
     }
-
+//  Hàm này được gọi khi người dùng xác nhận đặt lịch. Nó kiểm tra tính khả dụng của thời gian và thực hiện đặt lịch nếu thời gian là khả dụng.
     void _checkAvailabilityAndBook() async {
       bool isAvailable = await isTimeSlotAvailable(_selectedDate, _selectedTime);
       if (isAvailable) {
@@ -376,7 +381,7 @@
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(
                   "Dịch vụ đã được đặt thành công!!!",
-                  style: TextStyle(fontSize: 20.0),
+                  style: TextStyle(fontSize: 18.0, color: Colors.white),
                 )
             ))
           });
@@ -384,7 +389,7 @@
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
                 "Vui lòng chọn ngày giờ sau thời gian hiện tại.",
-                style: TextStyle(fontSize: 20.0),
+                style: TextStyle(fontSize: 18.0, color: Colors.white),
               )
           ));
         }
@@ -392,7 +397,7 @@
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
               "Thời gian đặt lịch cách nhau 30'. Vui lòng chọn thời gian khác.",
-              style: TextStyle(fontSize: 20.0),
+              style: TextStyle(fontSize: 18.0, color: Colors.white),
             )
         ));
       }
@@ -411,7 +416,7 @@
                   mainAxisAlignment: MainAxisAlignment.spaceBetween, // Dàn đều khoảng cách giữa các phần tử
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 50.0),
+                      padding: const EdgeInsets.only(top: 30.0),
                       child: GestureDetector(
                         onTap: () {
                           Navigator.pop(context);
@@ -424,7 +429,7 @@
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 50.0), // Thêm padding cho chữ "service"
+                      padding: const EdgeInsets.only(top: 30.0), // Thêm padding cho chữ "service"
                       child: Text(
                         widget.service,
                         style: TextStyle(
@@ -486,7 +491,7 @@
                          child: stylist(
                          ),
                        ),
-                       SizedBox(height: 30,),
+                       SizedBox(height: 10,),
                        Container(
                          padding: EdgeInsets.only(top: 10, bottom: 10.0),
                          decoration: BoxDecoration(

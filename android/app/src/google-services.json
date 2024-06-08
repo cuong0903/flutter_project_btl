@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "811860185292",
-    "project_id": "fir-newcreatedata",
-    "storage_bucket": "fir-newcreatedata.appspot.com"
+    "project_number": "805182271280",
+    "project_id": "barbershop-79626",
+    "storage_bucket": "barbershop-79626.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:811860185292:android:1a3d42f2e861b30b61f269",
+        "mobilesdk_app_id": "1:805182271280:android:7dc0f3f181060e0b3562f5",
         "android_client_info": {
           "package_name": "com.example.flutter_project_btl"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAuF-Q0kVTRkSn8YdLI_GzRCOnSjZLrEPw"
+          "current_key": "AIzaSyApRtDlMyH1g-IXyWZwW75vb7Eiyc1RFLs"
         }
       ],
       "services": {

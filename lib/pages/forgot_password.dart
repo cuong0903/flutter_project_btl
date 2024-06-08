@@ -2,128 +2,135 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPassword extends StatefulWidget {
-  const ForgotPassword({super.key});
+  const ForgotPassword({Key? key}) : super(key: key);
 
   @override
   State<ForgotPassword> createState() => _ForgotPasswordState();
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
-  String? email;
-  TextEditingController mailController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  resetPassword() async {
+
+  Future<void> resetPassword(String email) async {
+
+
+
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email!);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-          "Password reset Email has been sent!",
-          style: TextStyle(fontSize: 20.0),
-        ),
-      ));
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      _showSuccessMessage("Một email đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra email của bạn!");
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-            "No user found for that email.",
-            style: TextStyle(fontSize: 20.0),
-          ),
-        ));
+      print('FirebaseAuthException code: ${e.code}');
+      print('FirebaseAuthException message: ${e.message}');
+
+      String errorMessage;
+      switch (e.code) {
+
+        case 'invalid-email':
+          errorMessage = "Địa chỉ email không hợp lệ.";
+          break;
+        default:
+          errorMessage = "Đã xảy ra lỗi. Vui lòng thử lại. (Mã lỗi: ${e.code})";
       }
+      _showErrorMessage(errorMessage);
+    } catch (e) {
+      print('Non-FirebaseAuthException: $e');
+      _showErrorMessage("Đã xảy ra lỗi không xác định. Vui lòng thử lại.");
     }
+  }
+
+  void _showSuccessMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(fontSize: 18.0),
+      ),
+      backgroundColor: Colors.green,
+    ));
+  }
+
+  void _showErrorMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(fontSize: 18.0),
+      ),
+      backgroundColor: Colors.red,
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: Container(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text("Quên Mật Khẩu"),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(20.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              height: 70.0,
-            ),
-            Container(
-              alignment: Alignment.topCenter,
-              child: Text(
-                "Khôi phục mật khẩu",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30.0,
-                ),
-              ),
-            ),
-            SizedBox(height: 10.0),
+            SizedBox(height: 40.0),
             Text(
-              "Vui lòng nhập Email",
+              "Nhập email của bạn để đặt lại mật khẩu",
               style: TextStyle(
-                color: Colors.white,
+                fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                fontSize: 30.0,
               ),
+              textAlign: TextAlign.center,
             ),
-            SizedBox(height: 30.0),
+            SizedBox(height: 20.0),
             Form(
               key: _formKey,
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 20.0),
-                padding: EdgeInsets.only(left: 10.0, top: 10.0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white70, width: 2.0),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: TextFormField(
-                  controller: mailController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Vui lòng nhập gmail';
-                    }
-                    return null;
-                  },
-                  style: TextStyle(
-                    color: Colors.white,
+              child: TextFormField(
+                controller: _emailController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Vui lòng nhập địa chỉ email';
+                  }
+                  return null;
+                },
+                style: TextStyle(color: Colors.black),
+                decoration: InputDecoration(
+                  hintText: "Email",
+                  hintStyle: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.grey,
                   ),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Email",
-                    hintStyle: TextStyle(
-                      fontSize: 18.0,
-                      color: Colors.white60,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.mail_outline,
-                      color: Colors.white60,
-                      size: 30.0,
-                    ),
+                  prefixIcon: Icon(
+                    Icons.mail_outline,
+                    color: Colors.grey,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
+                keyboardType: TextInputType.emailAddress,
               ),
             ),
-            SizedBox(height: 50.0),
-            GestureDetector(
-              onTap: () async {
+            SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  setState(() {
-                    email = mailController.text;
-                  });
-                  await resetPassword();
+                  String email = _emailController.text.trim();
+                  resetPassword(email);
                 }
               },
-              child: Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Color(0xFFdf711a),
-                  borderRadius: BorderRadius.circular(10),
+              child: Text(
+                "Gửi Email Đặt Lại Mật Khẩu",
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                child: Text(
-                  "Gửi Email",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+              ),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 15.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
               ),
             ),
@@ -131,5 +138,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
   }
 }

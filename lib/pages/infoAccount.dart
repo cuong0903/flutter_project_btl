@@ -7,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../services/shared_pred.dart';
 
 class Infoaccount extends StatefulWidget {
-  final String userId;
+  final String userId; // ID của người dùng
 
   const Infoaccount({Key? key, required this.userId}) : super(key: key);
 
@@ -16,9 +16,9 @@ class Infoaccount extends StatefulWidget {
 }
 
 class _InfoaccountState extends State<Infoaccount> {
-  late Future<DocumentSnapshot> userFuture;
+  late Future<DocumentSnapshot> userFuture; // Future chứa dữ liệu người dùng
   bool isEditing = false;
-  final ImagePicker _picker = ImagePicker();
+  final ImagePicker _picker = ImagePicker(); // Đối tượng để chọn hình ảnh
   File? selectedImage;
 
   TextEditingController nameController = TextEditingController();
@@ -28,17 +28,18 @@ class _InfoaccountState extends State<Infoaccount> {
   @override
   void initState() {
     super.initState();
-    userFuture = DatabaseMethods().getUsers(widget.userId);
+    userFuture = DatabaseMethods().getUsers(widget.userId);  // Lấy dữ liệu người dùng từ cơ sở dữ liệu
   }
+  // Phương thức chọn ảnh từ thiết bị
   Future getImage() async {
     try {
       print('Starting to pick image...');
-      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery); // Chọn hình ảnh từ thư viện
       print('Image picked: ${pickedFile?.path}');
 
       if (pickedFile != null) {
         setState(() {
-          selectedImage = File(pickedFile.path);
+          selectedImage = File(pickedFile.path); // Lưu hình ảnh đã chọn
         });
       } else {
         print('No image selected.');
@@ -48,11 +49,11 @@ class _InfoaccountState extends State<Infoaccount> {
     }
   }
 
-
-
+  // Phương thức để chuyển đổi giữa chế độ chỉnh sửa và không chỉnh sửa
   void toggleEdit(Map<String, dynamic> userData) {
     setState(() {
-      isEditing = !isEditing;
+      isEditing = !isEditing; // Đảo ngược trạng thái chỉnh sửa
+      // Nếu đang ở chế độ chỉnh sửa, gán các giá trị hiện tại của người dùng vào các controller
       if (isEditing) {
         nameController.text = userData['Name'] ?? '';
         emailController.text = userData['Gmail'] ?? '';
@@ -61,13 +62,14 @@ class _InfoaccountState extends State<Infoaccount> {
     });
   }
 
+  // Phương thức để cập nhật thông tin người dùng
   Future<void> updateUserInfo() async {
     Map<String, dynamic> updatedInfo = {
       'Name': nameController.text,
       // 'Gmail': emailController.text,
       'NumberPhone': phoneController.text,
     };
-
+    // Nếu có hình ảnh được chọn, tải lên Firebase Storage
     if (selectedImage != null) {
       try {
         firebase_storage.Reference ref = firebase_storage.FirebaseStorage
@@ -76,39 +78,46 @@ class _InfoaccountState extends State<Infoaccount> {
             .child('profile_images')
             .child('${widget.userId}.jpeg');
 
+        // Tải hình ảnh lên Firebase Storage
         firebase_storage.UploadTask uploadTask = ref.putFile(selectedImage!);
         firebase_storage.TaskSnapshot taskSnapshot = await uploadTask;
 
+        // Lấy đường dẫn URL của hình ảnh đã tải lên
         String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 
-        updatedInfo['Image'] = downloadUrl;
+        updatedInfo['Image'] = downloadUrl;  // Cập nhật đường dẫn URL của hình ảnh trong thông tin người dùng
 
+        // Lưu đường dẫn URL của hình ảnh vào Shared Preferences
         await SharedpreferenceHelper().saveUserImage(downloadUrl);
 
       } catch (e) {
         print('Error uploading image: $e');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Lỗi khi tải lên ảnh: $e')),
+          SnackBar(content: Text('Lỗi khi tải lên ảnh: $e',style: TextStyle(fontSize: 18.0, color: Colors.white),)),
         );
         return;
       }
     }
 
     try {
+      // Cập nhật thông tin người dùng trong cơ sở dữ liệu
       await DatabaseMethods().getAndUpUsers(widget.userId, updatedInfo);
 
+      // Cập nhật trạng thái và dữ liệu người dùng
       setState(() {
         isEditing = false;
         userFuture = DatabaseMethods().getUsers(widget.userId);
       });
 
+      // Hiển thị thông báo cập nhật thành công
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Thông tin đã được cập nhật!')),
+        SnackBar(content: Text('Thông tin đã được cập nhật!', style: TextStyle(fontSize: 18.0, color: Colors.white),)),
       );
     } catch (e) {
       print('Error updating user info: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lỗi khi cập nhật thông tin: $e')),
+        // Hiển thị thông báo lỗi nếu cập nhật thông tin không thành công
+        SnackBar(content: Text('Lỗi khi cập nhật thông tin: $e',style: TextStyle(fontSize: 18.0, color: Colors.white),)),
       );
     }
   }
@@ -118,16 +127,14 @@ class _InfoaccountState extends State<Infoaccount> {
     return Scaffold(
       backgroundColor: Color(0xFF7AB9EE),
       body: Container(
-
         child: Column(
-
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: const EdgeInsets.only(top: 30),
               child: Row(
                 children: [
                   GestureDetector(
-                    onTap: () => Navigator.pop(context),
+                    onTap: () => Navigator.pop(context), // Hành động khi nhấn nút "Quay lại"
                     child: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black, size: 30),
                   ),
                   const SizedBox(width: 20),
@@ -147,8 +154,10 @@ class _InfoaccountState extends State<Infoaccount> {
               future: userFuture,
               builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
+                  // Hiển thị vòng tròn tiến trình khi đang tải dữ liệu
                   return const Center(child: CircularProgressIndicator());
                 }
+                // Lỗi
                 if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
@@ -156,24 +165,25 @@ class _InfoaccountState extends State<Infoaccount> {
                   return const Center(child: Text('Không có sẵn dữ liệu người dùng'));
                 }
 
+                // Dữ liệu người dùng từ snapshot
                 var userData = snapshot.data!.data() as Map<String, dynamic>;
 
                 return Center(
                   child: GestureDetector(
-                    onTap: isEditing ? getImage : null,
+                    onTap: isEditing ? getImage : null, // Hành động khi nhấn vào hình ảnh (nếu ở chế độ chỉnh sửa)
                     child: Container(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(10.0), // Khoảng cách đệm xung quanh hình ảnh
                       decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.grey, width: 1),
+                        shape: BoxShape.circle, // Hình dạng của container là hình tròn
+                        border: Border.all(color: Colors.grey, width: 1), // Viền xám xung quanh hình ảnh
                       ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(80),
+                        borderRadius: BorderRadius.circular(80),  // Bo tròn góc hình ảnh
                         child: selectedImage != null
-                            ? Image.file(selectedImage!, fit: BoxFit.cover, width: 160, height: 160)
+                            ? Image.file(selectedImage!, fit: BoxFit.cover, width: 160, height: 160) // Hiển thị hình ảnh được chọn từ thư viện
                             : (userData['Image'] != null
-                            ? Image.network(userData['Image'], fit: BoxFit.cover, width: 160, height: 160)
-                            : Image.network("images/boy.png", fit: BoxFit.cover, width: 160, height: 160)),
+                            ? Image.network(userData['Image'], fit: BoxFit.cover, width: 160, height: 160) // Hiển thị hình ảnh người dùng từ Firebase Storage (nếu có)
+                            : Image.network("images/boy.png", fit: BoxFit.cover, width: 160, height: 160)),  // Hiển thị hình ảnh mặc định nếu không có hình ảnh
                       ),
                     ),
                   ),
@@ -182,7 +192,7 @@ class _InfoaccountState extends State<Infoaccount> {
             ),
             if (isEditing && selectedImage == null)
               TextButton(
-                onPressed: getImage,
+                onPressed: getImage, // Hành động khi nhấn vào nút "Chọn ảnh mới" (chỉ khi ở chế độ chỉnh sửa và không có hình ảnh được chọn)
                 child: Text("Chọn ảnh mới"),
               ),
             const SizedBox(height: 50),
@@ -191,11 +201,13 @@ class _InfoaccountState extends State<Infoaccount> {
                 future: userFuture,
                 builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                   if (!snapshot.hasData || !snapshot.data!.exists) {
-                    return const SizedBox();
+                    return const SizedBox(); // Trả về rỗng
                   }
 
+                  // Dữ liệu người dùng từ snapshot
                   var userData = snapshot.data!.data() as Map<String, dynamic>;
 
+                  // Thiết lập giá trị của trường "" nếu không ở chế độ chỉnh sửa
                   if (!isEditing) {
                     nameController.text = userData['Name'] ?? '';
                     emailController.text = userData['Gmail'] ?? '';
@@ -208,9 +220,9 @@ class _InfoaccountState extends State<Infoaccount> {
                       children: [
                         TextFormField(
                           controller: nameController,
-                          readOnly: !isEditing,
+                          readOnly: !isEditing, // Chỉ cho phép chỉnh sửa khi ở chế độ chỉnh sửa
                           decoration: const InputDecoration(
-                            hintText: "Username",
+                            hintText: "Username",// Gợi ý cho trường "Tên"
                             prefixIcon: Icon(Icons.person_outline),
                           ),
                         ),
@@ -242,16 +254,16 @@ class _InfoaccountState extends State<Infoaccount> {
             GestureDetector(
               onTap: () {
                 if (isEditing) {
-                  updateUserInfo();
+                  updateUserInfo(); // Gọi phương thức cập nhật thông tin
                 } else {
                   userFuture.then((snapshot) {
                     var userData = snapshot.data() as Map<String, dynamic>;
-                    toggleEdit(userData);
+                    toggleEdit(userData); // Chuyển đổi chế độ chỉnh sửa khi nhấn vào nú
                   });
                 }
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40), // Khoảng cách đệm dọc và ngang của nút
                 decoration: BoxDecoration(
                   color: Colors.red,
                   borderRadius: BorderRadius.circular(30),
