@@ -17,20 +17,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   String? Name, image, id;
 
-  // Khai báo giá dịch vụ mặc định
-  final Map<String, String> defaultServicePrices = {
-    'Cạo râu': '50,000 VND',
-    'Gội đầu': '30,000 VND',
-    'Cắt tóc': '70,000 VND',
-    'Cắt tỉa râu công nghệ': '80,000 VND',
-    'Chăm sóc da mặt': '120,000 VND',
-    'Cắt tóc trẻ em': '60,000 VND',
-  };
+
 
   // Khai báo danh sách dịch vụ và giá dịch vụ
   late List<Map<String, dynamic>> services;
-  late Map<String, String> servicePrices =
-      Map.from(defaultServicePrices); // Sao chép giá dịch vụ mặc định
+  //Map để lưu trữ giá của các dịch vụ
+  // late Map<String, String> servicePrices = Map.from(defaultServicePrices);
 
 // Phương thức initState được gọi khi trạng thái được khởi tạo
   @override
@@ -38,8 +30,7 @@ class _HomeState extends State<Home> {
     super.initState();
     _initializeServices();
     getontheload();
-    servicePrices =
-        Map.from(defaultServicePrices); // Sao chép giá dịch vụ mặc định
+
   }
 
   // Khởi tạo danh sách dịch vụ
@@ -47,51 +38,58 @@ class _HomeState extends State<Home> {
     services = [
       {
         'title': 'Cạo râu',
+        'price': '50,000 VND',
         'imagePath': 'images/shaving.png',
         'color': Color(0xFF9575CD),
-        'onTap': () => _navigateToBooking('Cạo râu'),
+        'onTap': () => _navigateToBooking('Cạo râu', '50,000 VND'),
       },
       {
         'title': 'Gội đầu',
+        'price': '30,000 VND',
         'imagePath': 'images/hair.png',
         'color': Color(0xFFFFB74D),
-        'onTap': () => _navigateToBooking('Gội đầu'),
+        'onTap': () => _navigateToBooking('Gội đầu', '30,000 VND'),
       },
       {
         'title': 'Cắt tóc',
+        'price': '70,000 VND',
         'imagePath': 'images/cutting.png',
         'color': Color(0xFF4CAF50),
-        'onTap': () => _navigateToBooking('Cắt tóc'),
+        'onTap': () => _navigateToBooking('Cắt tóc', '70,000 VND'),
       },
       {
         'title': 'Cắt tỉa râu công nghệ',
+        'price': '80,000 VND',
         'imagePath': 'images/beard.png',
         'color': Color(0xFFEF5350),
-        'onTap': () => _navigateToBooking('Cắt tỉa râu công nghệ'),
+        'onTap': () => _navigateToBooking('Cắt tỉa râu công nghệ', '80,000 VND'),
       },
       {
         'title': 'Chăm sóc da mặt',
+        'price': '120,000 VND',
         'imagePath': 'images/facials.png',
         'color': Color(0xFF29B6F6),
-        'onTap': () => _navigateToBooking('Chăm sóc da mặt'),
+        'onTap': () => _navigateToBooking('Chăm sóc da mặt', '120,000 VND'),
       },
       {
         'title': 'Cắt tóc trẻ em',
+        'price': '60,000 VND',
         'imagePath': 'images/kids.png',
         'color': Color(0xFFFFCA28),
-        'onTap': () => _navigateToBooking('Cắt tóc trẻ em'),
+        'onTap': () => _navigateToBooking('Cắt tóc trẻ em','60,000 VND'),
       },
     ];
   }
 
   // Điều hướng tới trang đặt lịch với dịch vụ tương ứng
-  void _navigateToBooking(String service) {
+  void _navigateToBooking(String service, String price) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => Booking(
-            service: service,
-            price: servicePrices[service] ?? 'Giá không xác định'),
+          service: service,
+          price: price,
+        ),
       ),
     );
   }
@@ -107,8 +105,6 @@ class _HomeState extends State<Home> {
   // Gọi phương thức lấy dữ liệu khi tải trang
   Future<void> getontheload() async {
     await getthedatafromsharedpred();
-    servicePrices =
-        Map.from(defaultServicePrices); // Sao chép giá dịch vụ mặc định
     setState(() {});
   }
 
@@ -120,7 +116,7 @@ class _HomeState extends State<Home> {
         MaterialPageRoute(builder: (context) => Login()),
       );
     } catch (e) {
-      // Xử lý lỗi (ví dụ: hiển thị snackbar)
+      // Xử lý lỗi (ví dụ: hiển thị snackbar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
@@ -129,6 +125,144 @@ class _HomeState extends State<Home> {
         )),
       );
     }
+  }
+
+
+
+
+  // Hiển thị menu popup
+  void _showPopupMenu() {
+    // Phương thức này tạo ra một đối tượng RelativeRect từ tọa độ bốn góc (left, top, right, bottom).
+    final RelativeRect position = RelativeRect.fromLTRB(10, 100, 0, 0);
+    showMenu(
+      context: context,
+      position: position,
+      items: [
+        _buildPopupMenuItem(
+            Icons.account_circle,
+            'Thông tin tài khoản',
+            () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Infoaccount(userId: id ?? '')))),
+        _buildPopupMenuItem(
+            Icons.calendar_today,
+            'Lịch của bạn',
+            () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        BookingList(Name: Name ?? '', services: services)))),
+        _buildPopupMenuItem(
+            Icons.lock,
+            'Đổi mật khẩu',
+            () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ChangePassword(userId: id ?? '')))),
+        _buildPopupMenuItem(
+          Icons.logout,
+          'Đăng xuất',
+          _signOut,
+        ),
+      ],
+    );
+  }
+
+  // Xây dựng item menu popup
+  PopupMenuItem _buildPopupMenuItem(
+      IconData icon, String title,  onTapAction) {
+    return PopupMenuItem(
+      child: ListTile(
+        leading: Icon(icon, color: Colors.blue), // Biểu tượng
+        title: Text(title),
+        onTap: () {
+          Navigator.pop(context);  // Đóng menu popup
+          onTapAction();
+        },
+      ),
+    );
+  }
+
+  // Xây dựng thẻ dịch vụ
+  Widget _buildServiceCard(
+      String title, String imagePath, Color color,String price,  onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(20), // Làm tròn góc
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black26,// Màu bóng
+                blurRadius: 5, // Độ mờ của bóng
+                offset: Offset(0, 3))// vị trí
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(imagePath, height: 80, width: 80, fit: BoxFit.cover),
+            SizedBox(height: 10.0),
+            Text(title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold)),
+            Text(
+              price ?? 'Giá không xác định',
+              style: TextStyle(color: Colors.white, fontSize: 14.0),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+// Xây dựng phần header
+  Widget _buildHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween, // Căn giữa 2 đầu
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Xin chào, ",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w500)),
+            Text(Name ?? "Người dùng",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.bold))
+          ],
+        ),
+        GestureDetector(
+          onTap: () {
+            _showPopupMenu(); // Hiện thị menupop
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle, // hình tròn
+              border: Border.all(color: Colors.white, width: 2), // viền trắng
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30), // Làm tròn góc
+              child: image == null
+                  ? Image.asset("images/images.png",
+                  height: 60, width: 60, fit: BoxFit.cover)
+                  : Image.network(image!,
+                  height: 60, width: 60, fit: BoxFit.cover),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -165,7 +299,9 @@ class _HomeState extends State<Home> {
                     service['title']!,
                     service['imagePath']!,
                     service['color']!,
+                    service['price']!,
                     service['onTap']!,
+
                   );
                 }).toList(), // Tạo các thẻ từ danh sách dịch vụ
               ),
@@ -175,142 +311,6 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-
-// Xây dựng phần header
-  Widget _buildHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween, // Căn giữa 2 đầu
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Xin chào, ",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w500)),
-            Text(Name ?? "Người dùng",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold))
-          ],
-        ),
-        GestureDetector(
-          onTap: () {
-            _showPopupMenu(); // Hiện thị menupop
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle, // hình tròn
-              border: Border.all(color: Colors.white, width: 2), // viền trắng
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(30), // Làm tròn góc
-              child: image == null
-                  ? Image.asset("images/images.png",
-                      height: 60, width: 60, fit: BoxFit.cover)
-                  : Image.network(image!,
-                      height: 60, width: 60, fit: BoxFit.cover),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // Hiển thị menu popup
-  void _showPopupMenu() {
-    final RenderObject? overlay =
-        Overlay.of(context).context.findRenderObject(); // Lấy đối tượng Overlay
-    final RelativeRect position = RelativeRect.fromLTRB(
-      MediaQuery.of(context).size.width - 50,
-      100.0,
-      MediaQuery.of(context).size.width - 10,
-      0.0,
-    ); // Vị trí của menu popup
-    showMenu(
-      context: context,
-      position: position,
-      items: [
-        _buildPopupMenuItem(
-            Icons.account_circle,
-            'Thông tin tài khoản',
-            () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Infoaccount(userId: id ?? '')))),
-        _buildPopupMenuItem(
-            Icons.calendar_today,
-            'Lịch của bạn',
-            () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        BookingList(Name: Name ?? '', services: services)))),
-        _buildPopupMenuItem(
-            Icons.lock,
-            'Đổi mật khẩu',
-            () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ChangePassword(userId: id ?? '')))),
-        _buildPopupMenuItem(
-          Icons.logout,
-          'Đăng xuất',
-          _signOut,
-        ),
-      ],
-    );
-  }
-
-  // Xây dựng thẻ dịch vụ
-  Widget _buildServiceCard(
-      String title, String imagePath, Color color, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(20), // Làm tròn góc
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black26,// Màu bóng
-                blurRadius: 5, // Độ mờ của bóng
-                offset: Offset(0, 3))// vị trí
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(imagePath, height: 80, width: 80, fit: BoxFit.cover),
-            SizedBox(height: 10.0),
-            Text(title,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold)),
-            Text(servicePrices[title] ?? 'Giá không xác định',
-                style: TextStyle(color: Colors.white, fontSize: 14.0)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Xây dựng item menu popup
-  PopupMenuItem _buildPopupMenuItem(
-      IconData icon, String title, VoidCallback onTap) {
-    return PopupMenuItem(
-      child: ListTile(
-        leading: Icon(icon, color: Colors.blue), // Biểu tượng
-        title: Text(title),
-        onTap: () {
-          Navigator.pop(context);  // Đóng menu popup
-          onTap();
-        },
-      ),
-    );
-  }
 }
+
+

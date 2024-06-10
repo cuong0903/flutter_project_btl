@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedpreferenceHelper{
+  // biến này thuộc về lớp, không phải của mỗi thể hiện của lớ
   static String userIdkey = "USERKEY";
   static String userNamekey = "USERNAMEKEY";
   static String userGmailkey = "USERGMAILKEY";
@@ -9,6 +10,7 @@ class SharedpreferenceHelper{
 
   Future<bool> saveUserId(String getUserId) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    //  để lưu trữ giá trị của userId vào SharedPreferences.
     return prefs.setString(userIdkey, getUserId);
   }
 
@@ -31,6 +33,8 @@ class SharedpreferenceHelper{
     return prefs.setString(userImagekey, getUserImage);
   }
 
+
+  // Lấy giá trị
   Future<String?> getUserId() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(userIdkey);

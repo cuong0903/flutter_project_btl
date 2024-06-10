@@ -47,17 +47,17 @@ class _EditBookingPageState extends State<EditBookingPage> {
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance.collection("Stylist").get();
       List<DropdownMenuItem<String>> items = [];
-      if (!snapshot.docs.any((doc) => doc['NameWork'] == "Không chọn")) {
-        items.add(DropdownMenuItem<String>(
-          value: "Không chọn",
-          child: Text("Không chọn"),
-        ));
-      }
-      // Thêm các nhà tạo mẫu vào danh sách
+      // if (!snapshot.docs.any((doc) => doc['NameWork'] == "Không chọn")) {
+      //   items.add(DropdownMenuItem<String>(
+      //     value: "Không chọn",
+      //     child: Text("Không chọn"),
+      //   ));
+      // }
+
+      // Thêm tên thợ vào danh sách
       snapshot.docs.forEach((doc) {
         items.add(DropdownMenuItem<String>(
           value: doc['NameWork'],
-          // Sử dụng Row để hiển thị cả ảnh và văn bản
           child: Row(
             children: [
               // Hiển thị hình ảnh
@@ -81,7 +81,7 @@ class _EditBookingPageState extends State<EditBookingPage> {
         stylistItems = items; // Cập nhật danh sách các nhà tạo mẫu
       });
     } catch (e) {
-      // Xử lý lỗi
+
     }
   }
 
@@ -127,14 +127,43 @@ class _EditBookingPageState extends State<EditBookingPage> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Vui lòng điền đầy đủ thông tin cần thiết',style: TextStyle(fontSize: 18.0, color: Colors.white),)));
     }
   }
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 30)),
+    );
+
+// Kiểm tra xem người dùng đã chọn ngày hay chưa
+    if (picked != null) {
+      setState(() {
+        _dateController.text = "${picked.day}/${picked.month}/${picked.year}"; // Hiển thị ngày đã chọn
+      });
+    }
+  }
+
+  // Hàm xử lý sự kiện khi người dùng chọn giờ từ TimePicker
+  Future<void> _selectTime(BuildContext context) async {
+    // Hiển thị TimePicker và chờ người dùng chọn giờ
+    final TimeOfDay? picked = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    // Kiểm tra xem người dùng đã chọn giờ hay chưa
+    if (picked != null) {
+      setState(() {
+        _timeController.text = "${picked.hour}:${picked.minute}"; // Hiển thị giờ đã chọn
+        // Format giờ được chọn thành dạng 'HH:MM' và hiển thị trong trường nhập liệu
+      });
+    }
+
+  }
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         title: Text('Edit Booking'),
+        backgroundColor: Colors.transparent,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -144,7 +173,7 @@ class _EditBookingPageState extends State<EditBookingPage> {
             children: [
               DropdownButtonFormField<String>(
                 value: _selectedService.isNotEmpty ? _selectedService : null,
-                onChanged: _onServiceChanged,
+                onChanged: _onServiceChanged,// chọn dịch vụ
                 items: widget.services.map((service) {
                   String title = service['title'];
                   String price = widget.servicePrices[title] ?? ''; // Lấy giá dựa trên tên dịch vụ
@@ -186,7 +215,7 @@ class _EditBookingPageState extends State<EditBookingPage> {
                 decoration: InputDecoration(
                   labelText: 'Stylist',
                   border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
                 ),
               ),
               SizedBox(height: 20.0),
@@ -201,32 +230,5 @@ class _EditBookingPageState extends State<EditBookingPage> {
     );
   }
   // Hàm xử lý sự kiện khi người dùng chọn ngày từ DatePicker
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 365)),
-    );
-// Kiểm tra xem người dùng đã chọn ngày hay chưa
-    if (picked != null) {
-      setState(() {
-        _dateController.text = "${picked.day}/${picked.month}/${picked.year}"; // Hiển thị ngày đã chọn
-      });
-    }
-  }
 
-  // Hàm xử lý sự kiện khi người dùng chọn giờ từ TimePicker
-  Future<void> _selectTime(BuildContext context) async {
-    // Hiển thị TimePicker và chờ người dùng chọn giờ
-    final TimeOfDay? picked = await showTimePicker(context: context, initialTime: TimeOfDay.now());
-    // Kiểm tra xem người dùng đã chọn giờ hay chưa
-    if (picked != null) {
-      setState(() {
-        _timeController.text = "${picked.hour}:${picked.minute}"; // Hiển thị giờ đã chọn
-        // Format giờ được chọn thành dạng 'HH:MM' và hiển thị trong trường nhập liệu
-      });
-    }
-
-  }
 }

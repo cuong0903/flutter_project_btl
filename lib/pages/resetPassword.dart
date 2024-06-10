@@ -148,7 +148,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                     onPressed: _isLoading ? null : _changePassword,
                     // Xác định hành động khi nút được nhấn (nếu _isLoading = true thì không thực hiện hành động).
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                      backgroundColor: Color(0xff3747af),
                       padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     ),
                     child: _isLoading

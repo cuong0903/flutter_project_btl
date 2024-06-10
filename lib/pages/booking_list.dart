@@ -8,7 +8,6 @@ import 'package:intl/intl.dart';
 class BookingList extends StatefulWidget {
   final String Name;
   final List<Map<String, dynamic>> services; // Danh sách các dịch vụ
-
   const BookingList({Key? key, required this.Name, required this.services}) : super(key: key);
 
   @override
@@ -50,8 +49,12 @@ class _BookingListState extends State<BookingList> {
           return Center(child: CircularProgressIndicator(color: Colors.white));
         }
 
-        List<DocumentSnapshot> filteredBookings = _filterBookings(snapshot.data.docs);
-        // Danh sách các đặt lịch đã được lọc dựa trên ngày và dịch vụ được chọn.
+        // Lọc danh sách đặt lịch dựa trên id của tài khoản đã đăng nhập
+        List<DocumentSnapshot> allBookings = snapshot.data.docs
+            .where((booking) => booking['Name'] == widget.Name)
+            .toList();
+        // Lọc danh sách đặt lịch dựa trên ngày và dịch vụ đã chọn
+        List<DocumentSnapshot> filteredBookings = _filterBookings(allBookings);
         if (filteredBookings.isEmpty) {
           return Center(
             child: Text(
@@ -64,14 +67,11 @@ class _BookingListState extends State<BookingList> {
         return ListView.builder(
           padding: EdgeInsets.zero,
           itemCount: filteredBookings.length,// Số lượng item trong danh sách
-          scrollDirection: Axis.vertical, //// Hướng cuộn của danh sách
-          shrinkWrap: true, // Giảm kích thước của ListView để phù hợp với nội dung
+          scrollDirection: Axis.vertical, // Hướng cuộn của danh sách
           // Hàm xây dựng mỗi item trong danh sách
           itemBuilder: (context, index) {
             // Lấy thông tin của một đặt lịch từ danh sách đã lọc
             DocumentSnapshot ds = filteredBookings[index];
-            String bookingName = ds["Name"] ?? "";
-
             return Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
               // Container chứa thông tin của mỗi đặt lịch
@@ -93,8 +93,6 @@ class _BookingListState extends State<BookingList> {
                   ),
                   // Danh sách các widget con trong container
                   child: Column(
-
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Hiển thị hình ảnh đại diện của đặt lịch
                       ListTile(
@@ -208,6 +206,7 @@ class _BookingListState extends State<BookingList> {
     );
   }
 
+// Tạo một hàng chứa một biểu tượng và một đoạn văn bản.
   Widget _buildInfoRow(IconData icon, String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
@@ -226,11 +225,12 @@ class _BookingListState extends State<BookingList> {
       ),
     );
   }
-
+  // Hiển thị các bộ lọc cho người dùng, bao gồm chọn ngày và chọn dịch vụ.
   Widget _buildFilters() {
     return Column(
       children: [
         Row(
+          // sắp xếp các phần tử theo chiều ngang và căn giữa.
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButton(
@@ -240,7 +240,7 @@ class _BookingListState extends State<BookingList> {
                   context: context,
                   initialDate: DateTime.now(), // Ngày mặc định khi mở hộp thoại
                   firstDate: DateTime.now(), // Ngày đầu tiên có thể chọn
-                  lastDate: DateTime.now().add(Duration(days: 365)), // Ngày cuối cùng có thể chọn (1 năm sau)
+                  lastDate: DateTime.now().add(Duration(days: 30)),
                 );
                 // Nếu ngày được chọn và khác với ngày đã chọn trước đó
                 if (pickedDate != null && pickedDate != selectedDate) {
@@ -277,6 +277,7 @@ class _BookingListState extends State<BookingList> {
     );
   }
 
+ // Lọc danh sách đặt lịch dựa trên ngày và dịch vụ được chọn.
   List<DocumentSnapshot> _filterBookings(List<DocumentSnapshot> bookings) {
     // Lọc danh sách đặt lịch dựa trên ngày và dịch vụ được chọn
     if (selectedDate != null) {
@@ -294,7 +295,6 @@ class _BookingListState extends State<BookingList> {
     if (selectedService != null) {
       bookings = bookings.where((booking) => booking['Service'] == selectedService).toList();
     }
-
     return bookings;
   }
 
@@ -308,8 +308,7 @@ class _BookingListState extends State<BookingList> {
                 color: Colors.white,
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        backgroundColor: Colors.transparent,//AppBar có màu nền trong suốt (Colors.transparent)
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
@@ -333,9 +332,10 @@ class _BookingListState extends State<BookingList> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildFilters(),
+            _buildFilters(),// bộ lọc
             SizedBox(height: 20),
             Expanded(
+              //  danh sách đặt lịch
               child: allBookings(),
             ),
           ],

@@ -15,24 +15,24 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   String? mail, password;
-  bool _obscureText = true;
+  bool _obscureText = true;// Biến đánh dấu liệu văn bản mật khẩu có đang ẩn không
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>(); // Key của Form để kiểm tra tính hợp lệ của dữ liệu nhập vào
 
   Future<void> userLogin() async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: mail!, password: password!);
-
+      // Lấy thông tin người dùng từ cơ sở dữ liệu
       Map<String, dynamic>? userInfo = await DatabaseMethods().getUserInfoByEmail(mail!);
       if (userInfo != null) {
-        await SharedpreferenceHelper().saveUserName(userInfo["Name"]);
+        await SharedpreferenceHelper().saveUserName(userInfo["Name"]);// Lưu tên người dùng
         await SharedpreferenceHelper().saveUserId(userInfo["Id"]);
         await SharedpreferenceHelper().saveUserImage(userInfo["Image"]);
-        // Save other information if needed
+
       }
 
       // Kiểm tra nếu widget vẫn còn tồn tại trước khi điều hướng
@@ -74,7 +74,7 @@ class _LoginState extends State<Login> {
           children: [
             Container(
               padding: EdgeInsets.only(top: 50, left: 30.0),
-              height: MediaQuery.of(context).size.height / 2,
+              height: MediaQuery.of(context).size.height/2,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 gradient: LinearGradient(colors: [
@@ -100,7 +100,7 @@ class _LoginState extends State<Login> {
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(
+                  borderRadius: BorderRadius.only( // Bo tròn góc container ở trên cùng
                     topLeft: Radius.circular(40),
                     topRight: Radius.circular(40),
                   ),
@@ -115,6 +115,7 @@ class _LoginState extends State<Login> {
                         children: [
                           _buildTextField(
                             label: "Gmail",
+
                             controller: emailController,
                             hintText: "Gmail",
                             icon: Icons.mail_outline,
@@ -264,7 +265,7 @@ class _LoginState extends State<Login> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label,
+          label, // Nhãn của TextField, hiển thị bên trên TextField.
           style: TextStyle(
             color: Color(0xff3747af),
             fontSize: 25,
@@ -272,16 +273,18 @@ class _LoginState extends State<Login> {
           ),
         ),
         TextFormField(
-          controller: controller,
-          obscureText: obscureText,
-          validator: validator,
+          controller: controller, // Sử dụng controller được cung cấp
+          obscureText: obscureText, // Ẩn văn bản nếu obscureText là true
+          validator: validator, // Sử dụng hàm validator được cung cấp để kiểm tra dữ liệu nhập vào
           decoration: InputDecoration(
-            hintText: hintText,
-            prefixIcon: Icon(icon),
-            suffixIcon: suffixIcon,
+            hintText: hintText, // Gợi ý cho người dùng
+            prefixIcon: Icon(icon), // Icon bên trái của TextField
+            suffixIcon: suffixIcon,  // icon mật khẩu ẩn/hiện
           ),
         ),
       ],
     );
   }
+
 }
+

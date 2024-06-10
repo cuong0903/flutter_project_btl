@@ -33,19 +33,19 @@ class _InfoaccountState extends State<Infoaccount> {
   // Phương thức chọn ảnh từ thiết bị
   Future getImage() async {
     try {
-      print('Starting to pick image...');
+      print('Mở thư mục chọn ảnh...');
       final pickedFile = await _picker.pickImage(source: ImageSource.gallery); // Chọn hình ảnh từ thư viện
-      print('Image picked: ${pickedFile?.path}');
+      print('Chọn ảnh: ${pickedFile?.path}');
 
       if (pickedFile != null) {
         setState(() {
           selectedImage = File(pickedFile.path); // Lưu hình ảnh đã chọn
         });
       } else {
-        print('No image selected.');
+        print('Không có ảnh nào được chọn.');
       }
     } catch (e) {
-      print('Error picking image: $e');
+      print('Lỗi khi chọn ảnh: $e');
     }
   }
 
@@ -91,7 +91,7 @@ class _InfoaccountState extends State<Infoaccount> {
         await SharedpreferenceHelper().saveUserImage(downloadUrl);
 
       } catch (e) {
-        print('Error uploading image: $e');
+        print('Lỗi khi tải ảnh: $e');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Lỗi khi tải lên ảnh: $e',style: TextStyle(fontSize: 18.0, color: Colors.white),)),
         );
@@ -114,7 +114,7 @@ class _InfoaccountState extends State<Infoaccount> {
         SnackBar(content: Text('Thông tin đã được cập nhật!', style: TextStyle(fontSize: 18.0, color: Colors.white),)),
       );
     } catch (e) {
-      print('Error updating user info: $e');
+      print('Lỗi khi cập nhật thông tin: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         // Hiển thị thông báo lỗi nếu cập nhật thông tin không thành công
         SnackBar(content: Text('Lỗi khi cập nhật thông tin: $e',style: TextStyle(fontSize: 18.0, color: Colors.white),)),
@@ -183,7 +183,7 @@ class _InfoaccountState extends State<Infoaccount> {
                             ? Image.file(selectedImage!, fit: BoxFit.cover, width: 160, height: 160) // Hiển thị hình ảnh được chọn từ thư viện
                             : (userData['Image'] != null
                             ? Image.network(userData['Image'], fit: BoxFit.cover, width: 160, height: 160) // Hiển thị hình ảnh người dùng từ Firebase Storage (nếu có)
-                            : Image.network("images/boy.png", fit: BoxFit.cover, width: 160, height: 160)),  // Hiển thị hình ảnh mặc định nếu không có hình ảnh
+                            : Image.asset("images/boy.png", fit: BoxFit.cover, width: 160, height: 160)),  // Hiển thị hình ảnh mặc định nếu không có hình ảnh
                       ),
                     ),
                   ),
@@ -265,7 +265,7 @@ class _InfoaccountState extends State<Infoaccount> {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40), // Khoảng cách đệm dọc và ngang của nút
                 decoration: BoxDecoration(
-                  color: Colors.red,
+                  color: Color(0xff3747af),
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Text(

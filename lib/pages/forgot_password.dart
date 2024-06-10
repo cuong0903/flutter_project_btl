@@ -10,30 +10,20 @@ class ForgotPassword extends StatefulWidget {
 
 class _ForgotPasswordState extends State<ForgotPassword> {
   final TextEditingController _emailController = TextEditingController();
+  // GlobalKey<FormState> được sử dụng để xác định và kiểm soát trạng thái của Form.
   final _formKey = GlobalKey<FormState>();
 
-
+  // Hàm này gửi yêu cầu đặt lại mật khẩu thông qua Firebase Auth dựa trên email nhận được.
   Future<void> resetPassword(String email) async {
-
-
-
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      _showSuccessMessage("Một email đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra email của bạn!");
+      _showSuccessMessage(
+          "Một email đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra email của bạn!");
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       print('FirebaseAuthException code: ${e.code}');
       print('FirebaseAuthException message: ${e.message}');
-
-      String errorMessage;
-      switch (e.code) {
-
-        case 'invalid-email':
-          errorMessage = "Địa chỉ email không hợp lệ.";
-          break;
-        default:
-          errorMessage = "Đã xảy ra lỗi. Vui lòng thử lại. (Mã lỗi: ${e.code})";
-      }
-      _showErrorMessage(errorMessage);
+      _showErrorMessage(e.message ?? "Đã xảy ra lỗi. Vui lòng thử lại.");
     } catch (e) {
       print('Non-FirebaseAuthException: $e');
       _showErrorMessage("Đã xảy ra lỗi không xác định. Vui lòng thử lại.");
@@ -49,7 +39,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       backgroundColor: Colors.green,
     ));
   }
-
+  // hiển thị thông báo với SnackBar
   void _showErrorMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
